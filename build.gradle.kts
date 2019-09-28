@@ -1,7 +1,7 @@
 val arrowVersion by extra { "0.10.0" }
 
 plugins {
-    kotlin("jvm") version "1.2.71"
+    kotlin("jvm") version "1.3.30"
 }
 
 repositories {
@@ -18,4 +18,5 @@ dependencies {
     compile("io.arrow-kt:arrow-optics:$arrowVersion")
 
     testCompile("io.kotlintest:kotlintest-runner-junit5:3.3.2")
+    testCompile("junit:junit:4.12")
 }

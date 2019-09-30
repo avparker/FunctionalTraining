@@ -21,41 +21,34 @@ import arrow.core.Option
  * We use `Option` in situations where there isn't certainty that a meaningful
  * value will be returned to us.
  *
- *   The `get()` method on the key to value store `Map` is a great example of this.
- *
- *     We expect `get()` to take a key and give us a value in return.
- *
- *     But what happens when our Map doesn't know about the key we gave it?
- *
- *   A Map here is the same as in any other language,
- *   we just need to tell it about the types we're working with.
+ * For example, a Map in Kotlin is similar to many other languages,
+ * we just need to tell it about the types we're working with.
  *
  *     This is the type of the key
  *                      |
  *                      |     This is the type of the value
  *                      |      |
  *                      |      |
- *     val myMap = Map[Int, String]( 1 -> "one", 2 -> "two, ...)
+ *     val myMap = mapOf<Int, String>( 1 to "one", 2 to "two", ...)
  *
+ *   When we index a Map we will get back the nullable value type. Let's convert it to an `Option`:
  *
- *   When we call `get()` on Map we will always get back an `Option` type
+ *     Option.ofNullable(myMap[1]) = Some("one")  //The value exists and it's the string "one"
  *
- *     myMap.get(1) = Some("one")  //The value exists and it's the string "one"
- *
- *     myMap.get(0) = None      //The value doesn't exist so we get None
+ *     Option.ofNullable(myMap[0]) = None      //The value doesn't exist so we get None
  *
  *   `Some("one")` and `None` are both of the type Option
  *
- *   Since `Some` and `None` are the same type we can pattern match on them!
+ *   Since `Some` and `None` are the same type we can `when` match on them.
  *
  *   We can have one set of logic when we get Some back and a different set
  *   of logic when we get `None` back!
  *
- *   val mightBeSomething: Option[String] = myMap.get(3)
+ *   val mightBeSomething: Option<String> = Option.ofNullable(myMap[3])
  *
- *   val result: String = mightBeSomething match {
- *     case Some(string) => "I got a String back!"
- *     case None => "I got None back"
+ *   when(mightBeSomething) {
+ *     is Some -> "I got a String back!"
+ *     else -> otherwise()
  *   }
  *
  * Good luck!

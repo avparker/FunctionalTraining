@@ -19,7 +19,7 @@ class OptionalExercises1Test : StringSpec({
   }
 
   "The length of the host name" {
-    lengthOfHost() shouldBe Some(7)
+    lengthOfHost() shouldBe Some(12)
   }
 
   "The port plus 1000" {

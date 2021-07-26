@@ -2,7 +2,6 @@ package ft.typesafety
 
 import arrow.core.Option
 import arrow.core.getOrElse
-import arrow.optics.extensions.list.cons.tailOption
 import arrow.syntax.collections.tail
 
 /**
@@ -114,7 +113,7 @@ object OptionalExercises3 {
 
     object Nothing : Maybe<kotlin.Nothing>
 
-    fun <A, B> flatMap(m: Maybe<A>, f: (A) -> Maybe<B>): Maybe<B> = when(m) {
+    fun <A, B> flatMap(m: Maybe<A>, f: (A) -> Maybe<B>): Maybe<B> = when (m) {
         is Just -> f(m.get)
         else -> Nothing
     }
@@ -123,17 +122,17 @@ object OptionalExercises3 {
         Just(f(a))
     }
 
-    fun <A, B> fold(m: Maybe<A>, default: () -> B, f: (A) -> B): B = when(m) {
+    fun <A, B> fold(m: Maybe<A>, default: () -> B, f: (A) -> B): B = when (m) {
         is Just -> f(m.get)
         else -> default()
     }
 
-    fun <A> orElse(m: Maybe<A>, otherwise: () -> Maybe<A>): Maybe<A> = when(m) {
+    fun <A> orElse(m: Maybe<A>, otherwise: () -> Maybe<A>): Maybe<A> = when (m) {
         is Just -> m
         else -> otherwise()
     }
 
-    fun <A> orSome(m: Maybe<A>, default: () -> A): A = when(m) {
+    fun <A> orSome(m: Maybe<A>, default: () -> A): A = when (m) {
         is Just -> m.get
         else -> default()
     }
@@ -148,21 +147,14 @@ object OptionalExercises3 {
         if (l.isEmpty()) {
             Just(listOf())
         } else {
-            flatMap(l[0]) { head ->
-                map(sequence(l.tail())) { tail ->
-                    listOf(head) + tail
-                }
-            }
+            map2({ head, tail -> listOf(head) + tail }, l[0], sequence(l.tail()))
         }
 
-    fun <A, B> ap(m1: Maybe<A>, m2: Maybe<(A) -> B>): Maybe<B> = flatMap(m1) { a ->
-        map(m2) { f ->
-            f(a)
-        }
-    }
+    fun <A, B> ap(m1: Maybe<A>, m2: Maybe<(A) -> B>): Maybe<B> = map2({ a, b -> b(a) }, m1, m2)
 
     // Extras
 
+    // TODO - raise PR for test cases for filter
     fun <A> filter(m1: Maybe<A>, p: (A) -> Boolean): Maybe<A> = flatMap(m1) { a ->
         if (p(a)) Just(a) else Nothing
     }

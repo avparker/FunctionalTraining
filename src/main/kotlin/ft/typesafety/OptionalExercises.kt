@@ -2,6 +2,7 @@ package ft.typesafety
 
 import arrow.core.Option
 import arrow.core.getOrElse
+import arrow.syntax.collections.prependTo
 import arrow.syntax.collections.tail
 
 /**
@@ -147,7 +148,7 @@ object OptionalExercises3 {
         if (l.isEmpty()) {
             Just(listOf())
         } else {
-            map2({ head, tail -> listOf(head) + tail }, l[0], sequence(l.tail()))
+            map2({ head, tail -> head.prependTo(tail) }, l[0], sequence(l.tail()))
         }
 
     fun <A, B> ap(m1: Maybe<A>, m2: Maybe<(A) -> B>): Maybe<B> = map2({ a, b -> b(a) }, m1, m2)
@@ -155,7 +156,7 @@ object OptionalExercises3 {
     // Extras
 
     // TODO - raise PR for test cases for filter
-    fun <A> filter(m1: Maybe<A>, p: (A) -> Boolean): Maybe<A> = flatMap(m1) { a ->
+    fun <A> filter(m: Maybe<A>, p: (A) -> Boolean): Maybe<A> = flatMap(m) { a ->
         if (p(a)) Just(a) else Nothing
     }
 }

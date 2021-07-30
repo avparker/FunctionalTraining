@@ -2,8 +2,6 @@ package ft.typesafety
 
 import arrow.core.Option
 import arrow.core.getOrElse
-import arrow.syntax.collections.prependTo
-import arrow.syntax.collections.tail
 
 /**
  * Use pattern matching and recursion.  No vars, no loops, no overriding.
@@ -123,6 +121,10 @@ object OptionalExercises3 {
         Just(f(a))
     }
 
+    fun <A> filter(m: Maybe<A>, p: (A) -> Boolean): Maybe<A> = flatMap(m) { a ->
+        if (p(a)) Just(a) else Nothing
+    }
+
     fun <A, B> fold(m: Maybe<A>, default: () -> B, f: (A) -> B): B = when (m) {
         is Just -> f(m.get)
         else -> default()
@@ -138,25 +140,17 @@ object OptionalExercises3 {
         else -> default()
     }
 
-    fun <A, B, C> map2(f: (A, B) -> C, m1: Maybe<A>, m2: Maybe<B>): Maybe<C> = flatMap(m1) { a ->
+    fun <A, B, C> map2(m1 :Maybe<A>, m2 :Maybe<B>, f :(A, B) -> C): Maybe<C> = flatMap(m1) { a ->
         map(m2) { b ->
             f(a, b)
         }
     }
 
     fun <A> sequence(l: List<Maybe<A>>): Maybe<List<A>> =
-        if (l.isEmpty()) {
-            Just(listOf())
-        } else {
-            map2({ head, tail -> head.prependTo(tail) }, l[0], sequence(l.tail()))
+        l.fold(Just(listOf())) { acc, m ->
+            map2(acc, m) { la, a -> la + a }
         }
 
-    fun <A, B> ap(m1: Maybe<A>, m2: Maybe<(A) -> B>): Maybe<B> = map2({ a, b -> b(a) }, m1, m2)
+    fun <A, B> ap(m1: Maybe<A>, m2: Maybe<(A) -> B>): Maybe<B> = map2(m1, m2) { a, b -> b(a) }
 
-    // Extras
-
-    // TODO - raise PR for test cases for filter
-    fun <A> filter(m: Maybe<A>, p: (A) -> Boolean): Maybe<A> = flatMap(m) { a ->
-        if (p(a)) Just(a) else Nothing
-    }
 }

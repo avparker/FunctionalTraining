@@ -14,6 +14,7 @@ import ft.typesafety.OptionalExercises3.map
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import arrow.syntax.function.curried
+import ft.typesafety.OptionalExercises3.filter
 
 class OptionalExercises3Test : StringSpec({
 
@@ -29,8 +30,20 @@ class OptionalExercises3Test : StringSpec({
     map(Just(1)) { a -> a + 1 } shouldBe Just(2)
   }
 
-  "Map Nothing" {
+  "map on Nothing" {
     map<Int, Int>(Nothing) { a -> a + 1 } shouldBe Nothing
+  }
+
+  "filter in on a Just" {
+    filter(Just(2)) { a -> a > 1 } shouldBe Just(2)
+  }
+
+  "filter out on a Just" {
+    filter(Just(1)) { a -> a > 1 } shouldBe Nothing
+  }
+
+  "filter on Nothing" {
+    filter(Nothing) { _ -> true } shouldBe Nothing
   }
 
   "fold on a Just" {
@@ -58,11 +71,19 @@ class OptionalExercises3Test : StringSpec({
   }
 
   "map2 on a Just" {
-    map2({ a: Int, b: Int -> a + b }, Just(1), Just(2)) shouldBe Just(3)
+    map2(Just(1), Just(2)) { a :Int, b :Int -> a + b } shouldBe Just(3)
   }
 
-  "map2 on Nothing" {
-    map2({ a: Int, b: Int -> a + b }, Just(1), Nothing) shouldBe Nothing
+  "map2 on first Nothing" {
+    map2(Nothing, Just(1)) { a :Int, b :Int -> a + b } shouldBe Nothing
+  }
+
+  "map2 on second Nothing" {
+    map2(Just(1), Nothing) { a :Int, b :Int -> a + b } shouldBe Nothing
+  }
+
+  "sequence on an empty List" {
+    sequence(listOf<Maybe<Int>>()) shouldBe Just(listOf<Int>())
   }
 
   "sequence on a List of Justs" {

@@ -10,7 +10,7 @@ import kotlin.math.max
  *
  * You can't use any of the standard list functions, like `map`, `filter`, `flatMap`, `append`, `:::`, `:+`, etc.
  *
- * But you can always use `Cons` to construct a new list by prepending an element to another list.
+ * But you can always use `Cons(head, tail)` to construct a new list by prepending an element to another list.
  *
  * You CAN and are encouraged to use the solutions from the exercises below to solve the harder
  * ones towards the end.

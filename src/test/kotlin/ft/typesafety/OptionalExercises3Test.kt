@@ -4,6 +4,7 @@ import ft.typesafety.OptionalExercises3.Just
 import ft.typesafety.OptionalExercises3.Maybe
 import ft.typesafety.OptionalExercises3.Nothing
 import ft.typesafety.OptionalExercises3.ap
+import ft.typesafety.OptionalExercises3.filter
 import ft.typesafety.OptionalExercises3.flatMap
 import ft.typesafety.OptionalExercises3.orSome
 import ft.typesafety.OptionalExercises3.map2
@@ -14,7 +15,6 @@ import ft.typesafety.OptionalExercises3.map
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.StringSpec
 import arrow.syntax.function.curried
-import ft.typesafety.OptionalExercises3.filter
 
 class OptionalExercises3Test : StringSpec({
 
@@ -22,7 +22,7 @@ class OptionalExercises3Test : StringSpec({
     flatMap(Just(1)) { a -> Just(a + 1) } shouldBe Just(2)
   }
 
-  "flatMap on a Nothing" {
+  "flatMap on Nothing" {
     flatMap<Int, Int>(Nothing) { a -> Just(a + 1) } shouldBe Nothing
   }
 
@@ -50,7 +50,7 @@ class OptionalExercises3Test : StringSpec({
     fold(Just(1), default = { 0 }) { a -> a + 1 } shouldBe 2
   }
 
-  "fold Nothing" {
+  "fold on Nothing" {
     fold<Int, Int>(Nothing, default = { 0 }) { a -> a + 1 } shouldBe 0
   }
 

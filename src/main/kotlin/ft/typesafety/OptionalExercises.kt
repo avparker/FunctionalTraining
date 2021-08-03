@@ -58,39 +58,38 @@ import arrow.core.getOrElse
 
 object OptionalExercises1 {
 
-    private val config = mapOf("host" to "squareup.com", "port" to "8080")
+  private val config = mapOf("host" to "squareup.com", "port" to "8080")
 
-    fun getFromConfig(key: String): Option<String> = Option.fromNullable(config[key])
+  fun getFromConfig(key: String): Option<String> = Option.fromNullable(config[key])
 
-    fun lengthOfHost(): Option<Int> = getFromConfig("host").map { it.length }
+  fun lengthOfHost(): Option<Int> = getFromConfig("host").map { it.length }
 
-    fun portPlus1000(): Option<Int> = getFromConfig("port").map { it.toInt() + 1000 }
+  fun portPlus1000(): Option<Int> = getFromConfig("port").map { it.toInt() + 1000 }
 }
 
 object OptionalExercises2 {
 
-    private fun <A, B> Map<A, B>.getOption(key: A): Option<B> = Option.fromNullable(this[key])
+  private fun <A, B> Map<A, B>.getOption(key: A): Option<B> = Option.fromNullable(this[key])
 
-    val hosts = mapOf("host1" to "squareup.com", "host2" to "test.squareup.com", "host3" to "netflix.com")
-    val envs = mapOf("squareup.com" to "prod", "test.squareup.com" to "test", "amazon.com" to "stage")
+  val hosts = mapOf("host1" to "squareup.com", "host2" to "test.squareup.com", "host3" to "netflix.com")
+  val envs = mapOf("squareup.com" to "prod", "test.squareup.com" to "test", "amazon.com" to "stage")
 
-    // Should return the host string if successful or "couldn't resolve" if unsuccessful
-    fun getEnvForHost(host: String): String =
-        hosts.getOption(host).flatMap {
-            envs.getOption(it)
-        }
-            .getOrElse { "couldn't resolve" }
+  // Should return the host string if successful or "couldn't resolve" if unsuccessful
+  fun getEnvForHost(host: String): String =
+    hosts.getOption(host).flatMap {
+      envs.getOption(it)
+    }
+      .getOrElse { "couldn't resolve" }
 
-    // See how many ways you can implement this.
-    // TODO - raise PR for case of "connected"
-    // Will either return "connected to <squareup host>" or "not connected"
-    fun connectToSquareupHostsOnly(host: String): String =
-        hosts.getOption(host)
-            .filter { it.endsWith("squareup.com") }
-            .map(::createConnection)
-            .getOrElse { "not connected" }
+  // See how many ways you can implement this.
+  // Will either return "connected to <squareup host>" or "not connected"
+  fun connectToSquareupHostsOnly(host: String): String =
+    hosts.getOption(host)
+      .filter { it.endsWith("squareup.com") }
+      .map(::createConnection)
+      .getOrElse { "not connected" }
 
-    fun createConnection(domain: String): String = "connected to $domain"
+  fun createConnection(domain: String): String = "connected to $domain"
 }
 
 /**
@@ -106,51 +105,50 @@ object OptionalExercises2 {
 
 object OptionalExercises3 {
 
-    interface Maybe<out A>
+  interface Maybe<out A>
 
-    data class Just<A>(val get: A) : Maybe<A>
+  data class Just<A>(val get: A) : Maybe<A>
 
-    object Nothing : Maybe<kotlin.Nothing>
+  object Nothing : Maybe<kotlin.Nothing>
 
-    fun <A, B> flatMap(m: Maybe<A>, f: (A) -> Maybe<B>): Maybe<B> = when (m) {
-        is Just -> f(m.get)
-        else -> Nothing
+  fun <A, B> flatMap(m: Maybe<A>, f: (A) -> Maybe<B>): Maybe<B> = when (m) {
+    is Just -> f(m.get)
+    else -> Nothing
+  }
+
+  fun <A, B> map(m: Maybe<A>, f: (A) -> B): Maybe<B> = flatMap(m) { a ->
+    Just(f(a))
+  }
+
+  fun <A> filter(m: Maybe<A>, p: (A) -> Boolean): Maybe<A> = flatMap(m) { a ->
+    if (p(a)) Just(a) else Nothing
+  }
+
+  fun <A, B> fold(m: Maybe<A>, default: () -> B, f: (A) -> B): B = when (m) {
+    is Just -> f(m.get)
+    else -> default()
+  }
+
+  fun <A> orElse(m: Maybe<A>, otherwise: () -> Maybe<A>): Maybe<A> = when (m) {
+    is Just -> m
+    else -> otherwise()
+  }
+
+  fun <A> orSome(m: Maybe<A>, default: () -> A): A = when (m) {
+    is Just -> m.get
+    else -> default()
+  }
+
+  fun <A, B, C> map2(m1: Maybe<A>, m2: Maybe<B>, f: (A, B) -> C): Maybe<C> = flatMap(m1) { a ->
+    map(m2) { b ->
+      f(a, b)
+    }
+  }
+
+  fun <A> sequence(l: List<Maybe<A>>): Maybe<List<A>> =
+    l.fold(Just(listOf())) { acc, m ->
+      map2(acc, m) { la, a -> la + a }
     }
 
-    fun <A, B> map(m: Maybe<A>, f: (A) -> B): Maybe<B> = flatMap(m) { a ->
-        Just(f(a))
-    }
-
-    fun <A> filter(m: Maybe<A>, p: (A) -> Boolean): Maybe<A> = flatMap(m) { a ->
-        if (p(a)) Just(a) else Nothing
-    }
-
-    fun <A, B> fold(m: Maybe<A>, default: () -> B, f: (A) -> B): B = when (m) {
-        is Just -> f(m.get)
-        else -> default()
-    }
-
-    fun <A> orElse(m: Maybe<A>, otherwise: () -> Maybe<A>): Maybe<A> = when (m) {
-        is Just -> m
-        else -> otherwise()
-    }
-
-    fun <A> orSome(m: Maybe<A>, default: () -> A): A = when (m) {
-        is Just -> m.get
-        else -> default()
-    }
-
-    fun <A, B, C> map2(m1 :Maybe<A>, m2 :Maybe<B>, f :(A, B) -> C): Maybe<C> = flatMap(m1) { a ->
-        map(m2) { b ->
-            f(a, b)
-        }
-    }
-
-    fun <A> sequence(l: List<Maybe<A>>): Maybe<List<A>> =
-        l.fold(Just(listOf())) { acc, m ->
-            map2(acc, m) { la, a -> la + a }
-        }
-
-    fun <A, B> ap(m1: Maybe<A>, m2: Maybe<(A) -> B>): Maybe<B> = map2(m1, m2) { a, b -> b(a) }
-
+  fun <A, B> ap(m1: Maybe<A>, m2: Maybe<(A) -> B>): Maybe<B> = map2(m1, m2) { a, b -> b(a) }
 }

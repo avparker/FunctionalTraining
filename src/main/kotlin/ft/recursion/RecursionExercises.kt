@@ -51,22 +51,22 @@ object RecursionExercises {
 
   // You are not permitted to use any list functions such as map, flatMap, ++, flatten etc
   fun sum(l: FunList<Int>): Int {
-    tailrec fun sumAcc(acc: Int, l: FunList<Int>): Int =
+    tailrec fun sumAcc(l: FunList<Int>, acc: Int): Int =
       when(l) {
-        is Cons -> sumAcc(acc + l.head, l.tail)
+        is Cons -> sumAcc(l.tail, acc + l.head)
         else -> acc
       }
-    return sumAcc(0, l)
+    return sumAcc(l, 0)
   }
 
   //Again no list functions are permitted for the following
   fun <A> length(l: FunList<A>): Int {
-    tailrec fun lengthAcc(acc: Int, l: FunList<A>): Int =
+    tailrec fun lengthAcc(l: FunList<A>, acc: Int): Int =
       when(l) {
-        is Cons -> lengthAcc(acc + 1, l.tail)
+        is Cons -> lengthAcc(l.tail, acc + 1)
         else -> acc
       }
-    return lengthAcc(0, l)
+    return lengthAcc(l, 0)
   }
 
   // Do you notice anything similar between sum and length? Hmm...
@@ -97,11 +97,11 @@ object RecursionExercises {
   // Flatten a list of lists to a single list.  Remember you can't use list.flatten.  Can you use a previous
   // solution to solve this one?
   fun <A> flatten(x: FunList<FunList<A>>): FunList<A> {
-    tailrec fun flattenAcc(acc: FunList<A>, x: FunList<FunList<A>>): FunList<A> = when(x) {
-      is Cons -> flattenAcc(append(acc, x.head), x.tail)
+    tailrec fun flattenAcc(x: FunList<FunList<A>>, acc: FunList<A>): FunList<A> = when(x) {
+      is Cons -> flattenAcc(x.tail, append(acc, x.head))
       else -> acc
     }
-    return flattenAcc(Nil, x)
+    return flattenAcc(x, Nil)
   }
 
   // Follow the types.  You've done a great job getting here. Follow the types.
@@ -110,19 +110,19 @@ object RecursionExercises {
 
   // Maximum of the empty list is 0
   fun maximum(x: FunList<Int>): Int {
-    tailrec fun maximumAcc(acc: Int, x: FunList<Int>): Int = when(x) {
-      is Cons -> maximumAcc(max(acc, x.head), x.tail)
+    tailrec fun maximumAcc(x: FunList<Int>, acc: Int): Int = when(x) {
+      is Cons -> maximumAcc(x.tail, max(acc, x.head))
       else -> acc
     }
-    return maximumAcc(0, x)
+    return maximumAcc(x, 0)
   }
 
   // Reverse a list
   fun <A> reverse(x: FunList<A>): FunList<A> {
-    tailrec fun reverseAcc(acc: FunList<A>, x :FunList<A>): FunList<A> = when(x) {
-      is Cons -> reverseAcc(Cons(x.head, acc), x.tail)
+    tailrec fun reverseAcc(x: FunList<A>, acc: FunList<A>): FunList<A> = when(x) {
+      is Cons -> reverseAcc(x.tail, Cons(x.head, acc))
       else -> acc
     }
-    return reverseAcc(Nil, x)
+    return reverseAcc(x, Nil)
   }
 }

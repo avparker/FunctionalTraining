@@ -27,8 +27,8 @@ import kotlin.math.max
 
 sealed class FunList<out A> {
   companion object {
-    operator fun <A>invoke(vararg l:A ): FunList<A> = invoke(listOf(*l))
-    operator fun <A>invoke(l:List<A>): FunList<A> = l.foldRight(Nil, { e:A, acc: FunList<A> -> Cons<A>(e,acc)})
+    operator fun <A> invoke(vararg l: A): FunList<A> = invoke(listOf(*l))
+    operator fun <A> invoke(l: List<A>): FunList<A> = l.foldRight(Nil, { e: A, acc: FunList<A> -> Cons<A>(e,acc) })
   }
 }
 

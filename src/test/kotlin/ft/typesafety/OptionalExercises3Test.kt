@@ -71,11 +71,11 @@ class OptionalExercises3Test : StringSpec({
   }
 
   "map2 on a Just" {
-    map2({ a: Int, b: Int -> a + b }, Just(1), Just(2)) shouldBe Just(3)
+    map2(Just(1), Just(2)) { a: Int, b: Int -> a + b } shouldBe Just(3)
   }
 
   "map2 on Nothing" {
-    map2({ a: Int, b: Int -> a + b }, Just(1), Nothing) shouldBe Nothing
+    map2(Just(1), Nothing) { a: Int, b: Int -> a + b } shouldBe Nothing
   }
 
   "sequence on an empty List" {

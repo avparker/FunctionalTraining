@@ -114,7 +114,7 @@ object OptionalExercises3 {
 
   fun <A> orSome(m: Maybe<A>, default: () -> A): A = TODO()
 
-  fun <A, B, C> map2(f: (A, B) -> C, m1: Maybe<A>, m2: Maybe<B>): Maybe<C> = TODO()
+  fun <A, B, C> map2(m1: Maybe<A>, m2: Maybe<B>, f: (A, B) -> C): Maybe<C> = TODO()
 
   fun <A> sequence(l: List<Maybe<A>>): Maybe<List<A>> = TODO()
 

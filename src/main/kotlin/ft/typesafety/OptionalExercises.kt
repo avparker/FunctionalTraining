@@ -82,7 +82,6 @@ object OptionalExercises2 {
             .getOrElse { "couldn't resolve" }
 
     // See how many ways you can implement this.
-    // TODO - raise PR for case of "connected"
     // Will either return "connected to <squareup host>" or "not connected"
     fun connectToSquareupHostsOnly(host: String): String =
         hosts.getOption(host)

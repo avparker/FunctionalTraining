@@ -39,7 +39,7 @@ class OptionalExercises3Test : StringSpec({
   }
 
   "filter out on a Just" {
-    filter(Just(1)) { a -> a > 1 } shouldBe Nothing
+    filter(Just(0)) { a -> a > 1 } shouldBe Nothing
   }
 
   "filter on Nothing" {

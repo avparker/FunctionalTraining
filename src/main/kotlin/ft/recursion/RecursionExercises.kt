@@ -28,7 +28,7 @@ import kotlin.math.max
 sealed class FunList<out A> {
   companion object {
     operator fun <A> invoke(vararg l: A): FunList<A> = invoke(listOf(*l))
-    operator fun <A> invoke(l: List<A>): FunList<A> = l.foldRight(Nil, { e: A, acc: FunList<A> -> Cons<A>(e,acc) })
+    operator fun <A> invoke(l: List<A>): FunList<A> = l.foldRight(Nil, { e: A, acc: FunList<A> -> Cons<A>(e, acc) })
   }
 }
 
@@ -50,13 +50,13 @@ object RecursionExercises {
       add(plusOne(a), minusOne(b))
 
   // You are not permitted to use any list functions such as map, flatMap, ++, flatten etc
-  fun sum(l: FunList<Int>): Int {
-    tailrec fun sumAcc(l: FunList<Int>, acc: Int): Int =
-      when(l) {
-        is Cons -> sumAcc(l.tail, acc + l.head)
+  fun sum(x: FunList<Int>): Int {
+    tailrec fun sumAcc(x: FunList<Int>, acc: Int): Int =
+      when(x) {
+        is Cons -> sumAcc(x.tail, acc + x.head)
         else -> acc
       }
-    return sumAcc(l, 0)
+    return sumAcc(x, 0)
   }
 
   //Again no list functions are permitted for the following

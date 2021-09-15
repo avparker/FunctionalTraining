@@ -1,12 +1,7 @@
-# Lines starting with '#' are considered comments.
 .DS_Store
-.cache/
-.cache
-.classpath
-.project
+out
+gradle
+.gradle
+.kotlintest
+build
 .idea
-.idea_modules
-Thumbs.db
-.lib
-# sbt
-target/

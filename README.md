@@ -5,17 +5,9 @@ Introducing functional programming to interested and enlightened people.
 
 ## Running and compiling
 
-In the root directory there is a shell script called `sbt` it runs the sbt console.
+In the root directory there is a shell script called `gradlew` which does gradle things.
 
-	$ ./sbt
-
-To run the exercises simply type `test` in the `sbt` console.
-
-    > test
-
-To run a single exercise type `testOnly ft.<package>.<classnameSpec>`
-
-    > testOnly ft.higherorder.ComposingExercisesSpec
+	$ ./gradlew test
 
 ## Completing the exercises
 
